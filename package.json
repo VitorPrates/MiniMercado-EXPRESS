@@ -1,0 +1,20 @@
+{
+  "name": "minimercado-express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "server": "cd server && npx nodemon server.js",
+    "lojaexpress": "cd lojaexpress && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run lojaexpress\"",
+    "build": "cd lojaexpress && npm run build",
+    "start": "cd server && node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
