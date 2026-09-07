@@ -220,6 +220,86 @@ app.post('/cadastrar',upload.single('imagem'),(req, res) => {
 );
 
 // --------------------------------------------------
+// Deletar produto
+// --------------------------------------------------
+app.delete('/produtos/:id', (req, res) => {
+
+    const { id } = req.params;
+
+    // Primeiro busca o produto
+    db.get(
+        'SELECT imagem FROM produtos WHERE id = ?',
+        [id],
+        (err, produto) => {
+
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+
+            if (!produto) {
+                return res.status(404).json({
+                    error: 'Produto não encontrado.'
+                });
+            }
+
+            // Apaga do banco
+            db.run(
+                'DELETE FROM produtos WHERE id = ?',
+                [id],
+                function (err) {
+
+                    if (err) {
+                        return res.status(500).json({
+                            error: err.message
+                        });
+                    }
+
+                    // Se existe imagem, apaga o arquivo
+                    if (produto.imagem) {
+
+                        const nomeArquivo =
+                            path.basename(produto.imagem);
+
+                        const caminhoImagem =
+                            path.join(
+                                uploadDir,
+                                nomeArquivo
+                            );
+
+                        fs.unlink(
+                            caminhoImagem,
+                            (erro) => {
+
+                                // Arquivo não existir não impede
+                                // que o produto seja considerado apagado
+                                if (erro && erro.code !== 'ENOENT') {
+                                    console.error(
+                                        'Erro ao apagar imagem:',
+                                        erro
+                                    );
+                                }
+
+                            }
+                        );
+
+                    }
+                    res.json({
+                        message: 'Produto apagado com sucesso.',
+                        id: Number(id)
+                    });
+
+                }
+            );
+
+        }
+    );
+
+});
+
+
+// --------------------------------------------------
 // TESTE
 // --------------------------------------------------
 

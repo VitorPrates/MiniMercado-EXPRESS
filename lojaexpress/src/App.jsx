@@ -9,6 +9,30 @@ function App() {
   const [Produtos, setProdutos] = useState([])
   const [carregando, setCarregando] = useState(true);
   let valortotal = 0
+
+  const handleDelete = async (id) => {
+      try {
+          const response = await fetch(
+              `http://localhost:5000/produtos/${id}`,
+              {
+                method: 'DELETE'
+              }
+          );
+          const data = await response.json();
+          if (!response.ok) {
+              throw new Error(data.error);
+          }
+          // Remove o produto do estado
+          setProdutos(prev =>
+            prev.filter(produto => produto.id !== id)
+          );
+      } catch (error) {
+        console.error('Erro ao apagar produto:', error);
+      }
+
+  };
+
+
   const handleSubmit = async (e) => {
       e.preventDefault();
 
@@ -86,9 +110,11 @@ function App() {
 
           <button type='submit' className='col-start-5 row-start-1 row-end-3 cursor-pointer'> <Icons.PlusLg/> Adicionar</button>
         </nav>
-        <div className='flex flex-col p-5 border gap-1'>
+      </form>
+      <div className='w-[95%] m-auto max-w-275 mt-0'>
+         <div className='flex flex-col p-5 border gap-1'>
           {Produtos.map((produto) => (
-            <CardItem key={produto.id} img={produto.imagem} nome={produto.nome} quantidade={produto.quantidade} preco={produto.preco}/>
+            <CardItem onDelete={handleDelete} key={produto.id} id={produto.id} img={produto.imagem} nome={produto.nome} quantidade={produto.quantidade} preco={produto.preco}/>
           ))}
         </div>
         <div className='flex items-center ml-auto mr-0 w-fit gap-3 p-3 border border-t-0'>
@@ -96,7 +122,7 @@ function App() {
           <h4 className='font-bold'>Total:</h4>
           <p>{(valortotal).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})}</p>
         </div>
-      </form>
+      </div>
     </div>
   )
 }
