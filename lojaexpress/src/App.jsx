@@ -8,7 +8,7 @@ import Header from './Componentes/Header.jsx'
 function App() {
   const [Produtos, setProdutos] = useState([])
   const [carregando, setCarregando] = useState(true);
-
+  let valortotal = 0
   useEffect(() => {
         fetch('http://localhost:5000/produtos')
         .then((res) => res.json())
@@ -31,6 +31,10 @@ function App() {
         return <div className="text-center p-10 text-red-500">Erro ao carregar.</div>;
     }
 
+    Produtos.produtos.forEach(produto => {
+      valortotal += produto.quantidade * produto.preco/100
+    });
+    console.log(valortotal);
 
 
   return (
@@ -54,12 +58,11 @@ function App() {
           {Produtos.produtos.map((produto) => (
             <CardItem key={produto.id} img={produto.imagem} nome={produto.nome} quantidade={produto.quantidade} preco={produto.preco}/>
           ))}
-          
         </div>
         <div className='flex items-center ml-auto mr-0 w-fit gap-3 p-3 border border-t-0'>
           <span className='bg-green-600 p-3 rounded-full text-white'><Icons.CurrencyDollar/></span>
           <h4 className='font-bold'>Total:</h4>
-          <p>{(0).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})}</p>
+          <p>{(valortotal).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})}</p>
         </div>
       </form>
     </div>
