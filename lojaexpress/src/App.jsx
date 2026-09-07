@@ -27,6 +27,11 @@ function App() {
           <CardItem/>
           <CardItem/>
         </div>
+        <div className='flex items-center ml-auto mr-0 w-fit gap-3 p-3 border border-t-0'>
+          <span className='bg-green-600 p-3 rounded-full text-white'><Icons.CurrencyDollar/></span>
+          <h4 className='font-bold'>Total:</h4>
+          <p>{(0).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})}</p>
+        </div>
       </form>
     </div>
   )
