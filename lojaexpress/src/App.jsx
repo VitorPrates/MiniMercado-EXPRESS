@@ -9,12 +9,44 @@ function App() {
   const [Produtos, setProdutos] = useState([])
   const [carregando, setCarregando] = useState(true);
   let valortotal = 0
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+
+      try {
+          const response = await fetch(
+              'http://localhost:5000/cadastrar',
+              {
+                  method: 'POST',
+                  body: formData
+              }
+          );
+
+          const produto = await response.json();
+
+          if (!response.ok) {
+              throw new Error(produto.error);
+          }
+
+          setProdutos(prev => [
+              produto,
+              ...prev
+          ]);
+
+          e.target.reset();
+
+      } catch (error) {
+          console.error(error);
+      }
+  };
+
   useEffect(() => {
         fetch('http://localhost:5000/produtos')
         .then((res) => res.json())
         .then((dados) => {
             console.log(dados);
-            setProdutos(dados);  
+            setProdutos(dados.produtos);  
             setCarregando(false);
         })
         .catch((erro) => {
@@ -31,7 +63,7 @@ function App() {
         return <div className="text-center p-10 text-red-500">Erro ao carregar.</div>;
     }
 
-    Produtos.produtos.forEach(produto => {
+    Produtos.forEach(produto => {
       valortotal += produto.quantidade * produto.preco/100
     });
     console.log(valortotal);
@@ -40,7 +72,7 @@ function App() {
   return (
     <div>
       <Header/>
-      <form action="http://localhost:5000/cadastrar" method='POST' encType="multipart/form-data" className='w-[95%] m-auto max-w-275 p-3'>
+      <form onSubmit={handleSubmit} className='w-[95%] m-auto max-w-275 p-3'>
         <nav className='grid grid-cols-5 grid-rows-2 justify-center items-center *:border *:p-1 *:flex *:items-center *:gap-1'>
           <p> <Icons.Image/> Imagem</p>
           <p> <Icons.Box/> Produto</p>
@@ -55,7 +87,7 @@ function App() {
           <button type='submit' className='col-start-5 row-start-1 row-end-3 cursor-pointer'> <Icons.PlusLg/> Adicionar</button>
         </nav>
         <div className='flex flex-col p-5 border gap-1'>
-          {Produtos.produtos.map((produto) => (
+          {Produtos.map((produto) => (
             <CardItem key={produto.id} img={produto.imagem} nome={produto.nome} quantidade={produto.quantidade} preco={produto.preco}/>
           ))}
         </div>
