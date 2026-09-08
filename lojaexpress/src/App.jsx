@@ -3,11 +3,16 @@ import { useState, useEffect } from 'react'
 import * as Icons from "react-bootstrap-icons"
 import CardItem from './Componentes/CardItem.jsx'
 import Header from './Componentes/Header.jsx'
+import FormAtualizador from './Componentes/FormAtualizador.jsx'
 
 
 function App() {
   const [Produtos, setProdutos] = useState([])
   const [carregando, setCarregando] = useState(true);
+  const [atualizador, setAtualizador] = useState(false)
+  const [produtoupdate, setUpdate] = useState({nome:"nome produto", id:0})
+
+
   let valortotal = 0
 
   const handleDelete = async (id) => {
@@ -114,7 +119,7 @@ function App() {
       <div className='w-[95%] m-auto max-w-275 mt-0'>
          <div className='flex flex-col p-5 border gap-1'>
           {Produtos.map((produto) => (
-            <CardItem onDelete={handleDelete} key={produto.id} id={produto.id} img={produto.imagem} nome={produto.nome} quantidade={produto.quantidade} preco={produto.preco}/>
+            <CardItem onUpdate={()=>{setAtualizador(true), setUpdate(prevProduto => ({...prevProduto,nome: produto.nome,id: produto.id}))}} onDelete={handleDelete} key={produto.id} id={produto.id} img={produto.imagem} nome={produto.nome} quantidade={produto.quantidade} preco={produto.preco}/>
           ))}
         </div>
         <div className='flex items-center ml-auto mr-0 w-fit gap-3 p-3 border border-t-0'>
@@ -123,6 +128,7 @@ function App() {
           <p>{(valortotal).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})}</p>
         </div>
       </div>
+      <FormAtualizador nome={produtoupdate.nome} id={produtoupdate.id} cancelar={() => setAtualizador(false)} aparecer={atualizador ? 0 : 1}/>
     </div>
   )
 }

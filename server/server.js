@@ -19,7 +19,6 @@ app.use(express.json());
 // --------------------------------------------------
 // BANCO DE DADOS
 // --------------------------------------------------
-
 const db = new sqlite3.Database('./database.db', (err) => {
     if (err) {
         console.error('Erro ao abrir o banco de dados:', err.message);
@@ -42,7 +41,6 @@ db.run(`
 // --------------------------------------------------
 // UPLOADS
 // --------------------------------------------------
-
 const uploadDir = path.join(__dirname, 'uploads');
 
 if (!fs.existsSync(uploadDir)) {
@@ -51,7 +49,6 @@ if (!fs.existsSync(uploadDir)) {
 
 // Configuração do Multer
 const storage = multer.diskStorage({
-
     destination: (req, file, cb) => {
         cb(null, uploadDir);
     },
@@ -62,7 +59,6 @@ const storage = multer.diskStorage({
             Date.now() +
             '-' +
             Math.round(Math.random() * 1E9);
-
         cb(
             null,
             uniqueSuffix + path.extname(file.originalname)
@@ -89,7 +85,6 @@ const upload = multer({
 // --------------------------------------------------
 // SERVIR IMAGENS
 // --------------------------------------------------
-
 app.use(
     '/uploads',
     express.static(uploadDir)
@@ -99,7 +94,6 @@ app.use(
 // LISTAR PRODUTOS
 // --------------------------------------------------
 app.get('/produtos', (req, res) => {
-
     db.all(
         'SELECT * FROM produtos ORDER BY id DESC',
         [],
@@ -114,7 +108,6 @@ app.get('/produtos', (req, res) => {
             res.json({
                 produtos: rows
             });
-
         }
     );
 
@@ -150,12 +143,7 @@ app.post('/cadastrar',upload.single('imagem'),(req, res) => {
         }
 
         // Converter preço para centavos
-        //
-        // Exemplo:
-        // 19.90 -> 1990
-        //
         const precoNumerico = Number(preco);
-
         if (
             !Number.isFinite(precoNumerico) ||
             precoNumerico <= 0
