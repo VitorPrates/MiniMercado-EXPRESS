@@ -285,6 +285,229 @@ app.delete('/produtos/:id', (req, res) => {
     );
 
 });
+// --------------------------------------------------
+// Atualizar Produto
+// --------------------------------------------------
+app.put(
+    '/produtos/:id',
+    upload.single('imagem'),
+    (req, res) => {
+
+        const { id } = req.params;
+
+        const {
+            nome,
+            quantidade,
+            preco
+        } = req.body;
+
+
+        // -----------------------------
+        // VALIDAÇÕES
+        // -----------------------------
+
+        if (!nome) {
+            return res.status(400).json({
+                error: 'O nome do produto é obrigatório.'
+            });
+        }
+
+
+        const quantidadeNumerica =
+            Number(quantidade);
+
+        if (
+            !Number.isInteger(quantidadeNumerica) ||
+            quantidadeNumerica < 1
+        ) {
+
+            return res.status(400).json({
+                error: 'Quantidade inválida.'
+            });
+
+        }
+
+
+        const precoNumerico =
+            Number(preco);
+
+        if (
+            !Number.isFinite(precoNumerico) ||
+            precoNumerico <= 0
+        ) {
+
+            return res.status(400).json({
+                error: 'Preço inválido.'
+            });
+
+        }
+
+
+        const precoCentavos =
+            Math.round(precoNumerico * 100);
+
+
+        // -----------------------------
+        // BUSCAR PRODUTO ATUAL
+        // -----------------------------
+
+        db.get(
+            'SELECT * FROM produtos WHERE id = ?',
+            [id],
+            (err, produtoAtual) => {
+
+                if (err) {
+
+                    return res.status(500).json({
+                        error: err.message
+                    });
+
+                }
+
+
+                if (!produtoAtual) {
+
+                    return res.status(404).json({
+                        error: 'Produto não encontrado.'
+                    });
+
+                }
+
+
+                // -----------------------------
+                // DEFINIR IMAGEM
+                // -----------------------------
+
+                let imagem =
+                    produtoAtual.imagem;
+
+
+                // Se enviou uma nova imagem
+                if (req.file) {
+
+                    imagem =
+                        `/uploads/${req.file.filename}`;
+
+                }
+
+
+                // -----------------------------
+                // UPDATE
+                // -----------------------------
+
+                const query = `
+                    UPDATE produtos
+                    SET
+                        imagem = ?,
+                        nome = ?,
+                        quantidade = ?,
+                        preco = ?
+                    WHERE id = ?
+                `;
+
+
+                db.run(
+                    query,
+                    [
+                        imagem,
+                        nome,
+                        quantidadeNumerica,
+                        precoCentavos,
+                        id
+                    ],
+                    function (err) {
+
+                        if (err) {
+
+                            // Se uma nova imagem foi enviada
+                            // mas o banco falhou, apagar arquivo
+                            if (req.file) {
+
+                                fs.unlink(
+                                    req.file.path,
+                                    () => {}
+                                );
+
+                            }
+
+                            return res.status(500).json({
+                                error: err.message
+                            });
+
+                        }
+
+
+                        // -----------------------------
+                        // APAGAR IMAGEM ANTIGA
+                        // -----------------------------
+
+                        if (
+                            req.file &&
+                            produtoAtual.imagem
+                        ) {
+
+                            const nomeArquivo =
+                                path.basename(
+                                    produtoAtual.imagem
+                                );
+
+                            const caminhoImagem =
+                                path.join(
+                                    uploadDir,
+                                    nomeArquivo
+                                );
+
+                            fs.unlink(
+                                caminhoImagem,
+                                (erro) => {
+
+                                    if (
+                                        erro &&
+                                        erro.code !== 'ENOENT'
+                                    ) {
+
+                                        console.error(
+                                            'Erro ao apagar imagem antiga:',
+                                            erro
+                                        );
+
+                                    }
+
+                                }
+                            );
+
+                        }
+
+
+                        // -----------------------------
+                        // RETORNAR PRODUTO ATUALIZADO
+                        // -----------------------------
+
+                        res.json({
+
+                            id: Number(id),
+
+                            imagem,
+
+                            nome,
+
+                            quantidade:
+                                quantidadeNumerica,
+
+                            preco:
+                                precoCentavos
+
+                        });
+
+                    }
+                );
+
+            }
+        );
+
+    }
+);
+
 
 
 // --------------------------------------------------

@@ -10,10 +10,29 @@ function App() {
   const [Produtos, setProdutos] = useState([])
   const [carregando, setCarregando] = useState(true);
   const [atualizador, setAtualizador] = useState(false)
-  const [produtoupdate, setUpdate] = useState({nome:"nome produto", id:0})
+  const [produtoupdate, setUpdate] = useState(null);
 
 
   let valortotal = 0
+
+    const abrirAtualizador = (produto) => {
+
+      setUpdate(produto);
+      setAtualizador(true);
+
+  };
+
+  const handleUpdate = (produtoAtualizado) => {
+
+    setProdutos(prev =>
+        prev.map(produto =>
+            produto.id === produtoAtualizado.id
+                ? produtoAtualizado
+                : produto
+        )
+    );
+
+};
 
   const handleDelete = async (id) => {
       try {
@@ -119,7 +138,7 @@ function App() {
       <div className='w-[95%] m-auto max-w-275 mt-0'>
          <div className='flex flex-col p-5 border gap-1'>
           {Produtos.map((produto) => (
-            <CardItem onUpdate={()=>{setAtualizador(true), setUpdate(prevProduto => ({...prevProduto,nome: produto.nome,id: produto.id}))}} onDelete={handleDelete} key={produto.id} id={produto.id} img={produto.imagem} nome={produto.nome} quantidade={produto.quantidade} preco={produto.preco}/>
+            <CardItem onUpdate={() => abrirAtualizador(produto)} onDelete={handleDelete} key={produto.id} id={produto.id} img={produto.imagem} nome={produto.nome} quantidade={produto.quantidade} preco={produto.preco}/>
           ))}
         </div>
         <div className='flex items-center ml-auto mr-0 w-fit gap-3 p-3 border border-t-0'>
@@ -128,7 +147,19 @@ function App() {
           <p>{(valortotal).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})}</p>
         </div>
       </div>
-      <FormAtualizador nome={produtoupdate.nome} id={produtoupdate.id} cancelar={() => setAtualizador(false)} aparecer={atualizador ? 0 : 1}/>
+     {atualizador && produtoupdate && (
+
+        <FormAtualizador
+            id={produtoupdate.id}
+            img={produtoupdate.imagem}
+            nome={produtoupdate.nome}
+            quantidade={produtoupdate.quantidade}
+            preco={produtoupdate.preco}
+            onUpdate={handleUpdate}
+            cancelar={() => setAtualizador(false)}
+        />
+
+    )}
     </div>
   )
 }
