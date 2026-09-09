@@ -15,7 +15,7 @@ export default function CardItem({id,img,nome,quantidade,preco, onDelete, onUpda
             <p>{preco? (preco/100).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : "R$ 00,00"}</p>
             <span>=</span>
             <p>{quantidade && preco? ((quantidade*preco)/100).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : `${(0).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})}`}</p>
-            <div className="flex items-center bg-gray-300 w-fit p-2 rounded-2xl text-red-600 ">
+            <div className="flex items-center border border-black w-fit p-2 rounded-2xl text-red-600 hover:bg-red-300 transition duration-300 ease-in-out">
                 <button type="button" onClick={()=>onDelete(id)} className="cursor-pointer"><Icons.Trash/></button>
             </div>
         </div>
