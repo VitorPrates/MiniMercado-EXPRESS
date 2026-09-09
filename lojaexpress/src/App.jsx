@@ -122,22 +122,28 @@ function App() {
     <div className='h-screen bg-gray-50 grid grid-rows-[7%_83%_10%]'>
       <Header/>
       <main>
-        <form onSubmit={handleSubmit} className='w-[95%] m-auto max-w-275 p-3'>
-        <nav className='grid grid-cols-5 grid-rows-2 justify-center items-center *:border *:p-1 *:flex *:items-center *:gap-1'>
-          <p> <Icons.Image/> Imagem</p>
+        <form onSubmit={handleSubmit} className='w-[95%] m-auto max-w-275 p-3 pb-0'>
+        <nav className='
+        [&_p]:flex [&_p]:justify-center [&_p]:gap-3 [&_p]:w-full [&_p]:bg-blue-700 [&_p]:text-white [&_p]:border-black [&_p]:rounded-t-2xl [&_p]:font-bold [&_p]:border-b-0
+        [&_input]:border-b-0 
+        grid grid-cols-5 grid-rows-2 gap-x-1 justify-center items-center 
+        *:border *:p-1 *:flex *:items-center *:gap-1'>
+          <p  > <Icons.Image/> Imagem</p>
           <p> <Icons.Box/> Produto</p>
           <p> <Icons.Calculator/> Quantidade</p>
-          <p> <Icons.Tag/> Preço</p>
+          <p> <Icons.Tag/> Preço ( R$ )</p>
 
           <input type="file" accept='image/*' name="imagem"/>
           <input type="text" placeholder='Produto' name="nome" required/>
           <input type="number" placeholder='Quantidade'  name="quantidade" required min={1}/>
           <input type="number" placeholder='Preço' name="preco" required step={0.01} min={1}/>
 
-          <button type='submit' className='col-start-5 row-start-1 row-end-3 cursor-pointer'> <Icons.PlusLg/> Adicionar</button>
+          <button type='submit' className='
+          col-start-5 row-start-1 row-end-3 cursor-pointer rounded-full flex justify-center bg-blue-700 text-white font-bold
+          '> <Icons.PlusLg/> Adicionar</button>
         </nav>
       </form>
-      <div className='w-[95%] m-auto max-w-275 mt-0'>
+      <div className='w-[95%] m-auto max-w-275'>
          <div className='flex flex-col p-5 border gap-1'>
           {Produtos.map((produto) => (
             <CardItem onUpdate={() => abrirAtualizador(produto)} onDelete={handleDelete} key={produto.id} id={produto.id} img={produto.imagem} nome={produto.nome} quantidade={produto.quantidade} preco={produto.preco}/>
