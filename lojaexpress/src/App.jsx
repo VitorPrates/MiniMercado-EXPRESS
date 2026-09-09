@@ -4,6 +4,7 @@ import * as Icons from "react-bootstrap-icons"
 import CardItem from './Componentes/CardItem.jsx'
 import Header from './Componentes/Header.jsx'
 import FormAtualizador from './Componentes/FormAtualizador.jsx'
+import Footer from './Componentes/Footer.jsx'
 
 
 function App() {
@@ -118,9 +119,10 @@ function App() {
 
 
   return (
-    <div>
+    <div className='h-screen bg-gray-50 grid grid-rows-[7%_83%_10%]'>
       <Header/>
-      <form onSubmit={handleSubmit} className='w-[95%] m-auto max-w-275 p-3'>
+      <main>
+        <form onSubmit={handleSubmit} className='w-[95%] m-auto max-w-275 p-3'>
         <nav className='grid grid-cols-5 grid-rows-2 justify-center items-center *:border *:p-1 *:flex *:items-center *:gap-1'>
           <p> <Icons.Image/> Imagem</p>
           <p> <Icons.Box/> Produto</p>
@@ -147,19 +149,21 @@ function App() {
           <p>{(valortotal).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})}</p>
         </div>
       </div>
-     {atualizador && produtoupdate && (
+      {atualizador && produtoupdate && (
 
-        <FormAtualizador
-            id={produtoupdate.id}
-            img={produtoupdate.imagem}
-            nome={produtoupdate.nome}
-            quantidade={produtoupdate.quantidade}
-            preco={produtoupdate.preco}
-            onUpdate={handleUpdate}
-            cancelar={() => setAtualizador(false)}
-        />
+          <FormAtualizador
+              id={produtoupdate.id}
+              img={produtoupdate.imagem}
+              nome={produtoupdate.nome}
+              quantidade={produtoupdate.quantidade}
+              preco={produtoupdate.preco}
+              onUpdate={handleUpdate}
+              cancelar={() => setAtualizador(false)}
+          />
 
-    )}
+      )}
+      </main>
+    <Footer/>
     </div>
   )
 }
