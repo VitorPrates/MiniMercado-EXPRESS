@@ -5,8 +5,10 @@ import * as Icons from "react-bootstrap-icons"
 export default function CardItem({id,img,nome,quantidade,preco, onDelete, onUpdate})
 { 
     return(
-        <div className="border p-1 grid grid-cols-[1fr_35%_repeat(6,1fr)] items-center justify-center text-center *:m-auto">
-            <img src={img? `http://localhost:5000${img}` : nindentificado} width={50} alt="" />
+        <div className="
+        border p-1 grid grid-cols-[1fr_35%_repeat(6,1fr)] items-center justify-center text-center *:m-auto rounded-[10px]
+        ">
+            <img src={img? `http://localhost:5000${img}` : nindentificado} width={50} alt="" className="aspect-square"/>
             <p className="cursor-pointer" onClick={() => onUpdate(id)}>{nome? nome : "Produto"}</p>
             <p>{quantidade? quantidade : "0"}</p>
             <span ><Icons.X/></span>

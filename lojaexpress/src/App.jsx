@@ -144,12 +144,12 @@ function App() {
         </nav>
       </form>
       <div className='w-[95%] m-auto max-w-275'>
-         <div className='flex flex-col p-5 border gap-1'>
+         <div className='flex flex-col p-5 border gap-1 rounded-[10px]'>
           {Produtos.map((produto) => (
             <CardItem onUpdate={() => abrirAtualizador(produto)} onDelete={handleDelete} key={produto.id} id={produto.id} img={produto.imagem} nome={produto.nome} quantidade={produto.quantidade} preco={produto.preco}/>
           ))}
         </div>
-        <div className='flex items-center ml-auto mr-0 w-fit gap-3 p-3 border border-t-0'>
+        <div className='flex items-center ml-auto w-fit gap-3 p-3 border border-t-0 rounded-b-[10px] mr-2.5'>
           <span className='bg-green-600 p-3 rounded-full text-white'><Icons.CurrencyDollar/></span>
           <h4 className='font-bold'>Total:</h4>
           <p>{(valortotal).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})}</p>

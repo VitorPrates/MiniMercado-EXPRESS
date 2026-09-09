@@ -41,7 +41,7 @@ export default function FormAtualizador({id,img,nome,quantidade,preco,onUpdate,c
         }
     };
     return (
-        <form onSubmit={handleSubmit}className="border w-[95%] m-auto mt-2.5 p-1 grid grid-cols-[1fr_30%_15%_1fr_15%_repeat(4,1fr)] items-center justify-center text-center *:m-auto">
+        <form onSubmit={handleSubmit}className="border w-[95%] max-w-275 m-auto mt-2.5 p-1 grid grid-cols-[1fr_30%_15%_1fr_15%_repeat(4,1fr)] items-center justify-center text-center *:m-auto rounded-[10px]">
             <p className=" flex flex-col text-center justify-center items-center ">
                 <img src={ img ? `http://localhost:5000${img}` : nindentificado } width={50} alt="" />
                 <input className="w-full"type="file"accept="image/*"name="imagem"/>
